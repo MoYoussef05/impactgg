@@ -1,4 +1,8 @@
+import AppNavBar from "@/components/partials/navbar/main/AppNavBar";
+import AppSidebar from "@/components/partials/sidebar/main/AppSidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { getSession } from "@/lib/getSession";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -13,11 +17,20 @@ export default async function template({ children }: TemplateProps) {
     return redirect("/sign-in");
   }
 
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+
   return (
     <>
-      <div>
-        <main>{children}</main>
-      </div>
+      <SidebarProvider defaultOpen={defaultOpen}>
+        <AppSidebar />
+        <SidebarInset
+          className={"h-[calc(100vh-1rem)] overflow-clip overflow-y-auto"}
+        >
+          <AppNavBar />
+          <main className={"p-4"}>{children}</main>
+        </SidebarInset>
+      </SidebarProvider>
     </>
   );
 }

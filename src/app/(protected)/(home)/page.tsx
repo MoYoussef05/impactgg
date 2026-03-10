@@ -5,10 +5,14 @@ export default async function Page() {
   const session = await getSession();
   return (
     <>
-      <div className={"container mx-auto py-4"}>
-        <code>
-          <pre>{JSON.stringify(session, null, 2)}</pre>
-        </code>
+      <div className={"space-y-4"}>
+        <div>
+          <code>
+            <pre className={"text-sm text-wrap font-mono"}>
+              {JSON.stringify(session, null, 2)}
+            </pre>
+          </code>
+        </div>
         <SignOutButton />
       </div>
     </>
