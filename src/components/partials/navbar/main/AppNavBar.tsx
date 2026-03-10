@@ -1,6 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getSession } from "@/lib/getSession";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
+import AppNavBarBreadCrumb from "./AppNavBarBreadCrumb";
 
 export default async function AppNavBar() {
   const session = await getSession();
@@ -16,8 +18,13 @@ export default async function AppNavBar() {
       }
     >
       <nav className={"flex items-center justify-between w-full h-full p-4"}>
-        <div>
+        <div className={"flex items-center gap-2"}>
           <SidebarTrigger />
+          <Separator
+            orientation="vertical"
+            className="h-6! w-px! hidden md:block"
+          />
+          <AppNavBarBreadCrumb />
         </div>
         <div className={"flex items-center gap-2"}>
           <Avatar className={"size-8 rounded-md"}>
