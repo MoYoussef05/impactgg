@@ -17,7 +17,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Impact GG",
+  title: {
+    default: "Impact GG",
+    template: "%s - Impact GG",
+  },
 };
 
 export default function RootLayout({

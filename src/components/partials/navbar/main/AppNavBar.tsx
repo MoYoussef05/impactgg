@@ -3,6 +3,7 @@ import { getSession } from "@/lib/getSession";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import AppNavBarBreadCrumb from "./AppNavBarBreadCrumb";
+import Link from "next/link";
 
 export default async function AppNavBar() {
   const session = await getSession();
@@ -26,7 +27,7 @@ export default async function AppNavBar() {
           />
           <AppNavBarBreadCrumb />
         </div>
-        <div className={"flex items-center gap-2"}>
+        <Link href={"/account"} className={"flex items-center gap-2"}>
           <Avatar className={"size-8 rounded-md"}>
             <AvatarImage
               src={session.user.image ?? ""}
@@ -40,7 +41,7 @@ export default async function AppNavBar() {
               {session.user.email}
             </p>
           </div>
-        </div>
+        </Link>
       </nav>
     </header>
   );

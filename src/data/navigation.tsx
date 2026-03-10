@@ -1,4 +1,9 @@
-import { IconCompassFilled, IconHomeFilled } from "@tabler/icons-react";
+import {
+  IconBookFilled,
+  IconCompassFilled,
+  IconHomeFilled,
+  IconUserFilled,
+} from "@tabler/icons-react";
 
 export interface SidebarNavigationItem {
   label: string;
@@ -15,9 +20,21 @@ export const SIDEBAR_NAVIGATION: SidebarNavigationItem[] = [
     disabled: false,
   },
   {
-    label: "Explore",
-    href: "/explore",
+    label: "Discovery",
+    href: "/discovery",
     icon: <IconCompassFilled />,
+    disabled: false,
+  },
+  {
+    label: "Guides",
+    href: "/guides",
+    icon: <IconBookFilled />,
+    disabled: false,
+  },
+  {
+    label: "Coaching",
+    href: "/coaching",
+    icon: <IconUserFilled />,
     disabled: false,
   },
 ];
