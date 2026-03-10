@@ -1,6 +1,7 @@
 import {
   IconBookFilled,
   IconCompassFilled,
+  IconDeviceGamepad2Filled,
   IconHomeFilled,
   IconUserFilled,
 } from "@tabler/icons-react";
@@ -35,6 +36,12 @@ export const SIDEBAR_NAVIGATION: SidebarNavigationItem[] = [
     label: "Coaching",
     href: "/coaching",
     icon: <IconUserFilled />,
+    disabled: false,
+  },
+  {
+    label: "Games",
+    href: "/games",
+    icon: <IconDeviceGamepad2Filled />,
     disabled: false,
   },
 ];
