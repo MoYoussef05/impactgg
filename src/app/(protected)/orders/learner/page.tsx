@@ -2,6 +2,10 @@ import { getLearnerBookings } from "@/actions/booking";
 import { LearnerBookingsSection } from "@/app/(protected)/account/_components/BookingsSection";
 import { getSession } from "@/lib/getSession";
 
+export const metadata = {
+  title: "My coaching orders",
+};
+
 export default async function Page() {
   const session = await getSession();
   if (!session) {

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 import {
   getGuideById,
@@ -22,6 +23,23 @@ interface PageProps {
   params: Promise<{
     guideId: string;
   }>;
+}
+
+export async function generateMetadata(
+  props: PageProps,
+): Promise<Metadata> {
+  const { guideId } = await props.params;
+  const guide = await getGuideById(guideId);
+
+  if (!guide) {
+    return {
+      title: "Guide not found",
+    };
+  }
+
+  return {
+    title: guide.title,
+  };
 }
 
 export default async function GuideDetailPage({ params }: PageProps) {

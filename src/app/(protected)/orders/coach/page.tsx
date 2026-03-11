@@ -3,6 +3,10 @@ import AvailabilitySection from "@/app/(protected)/account/_components/Availabil
 import { CoachBookingsSection } from "@/app/(protected)/account/_components/BookingsSection";
 import { getSession } from "@/lib/getSession";
 
+export const metadata = {
+  title: "Coaching orders",
+};
+
 export default async function Page() {
   const session = await getSession();
   if (!session) {

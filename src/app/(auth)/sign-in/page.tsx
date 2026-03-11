@@ -1,6 +1,11 @@
 import SignInForm from "@/components/partials/auth/SignInForm";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { IconAlertCircle } from "@tabler/icons-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sign in",
+};
 
 export default function Page() {
   return (

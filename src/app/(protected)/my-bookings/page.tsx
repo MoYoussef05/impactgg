@@ -1,8 +1,11 @@
-import {
-  getLearnerBookings,
-} from "@/actions/booking";
+import { getLearnerBookings } from "@/actions/booking";
 import { LearnerBookingsSection } from "@/app/(protected)/account/_components/BookingsSection";
 import { getSession } from "@/lib/getSession";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My bookings",
+};
 
 export default async function Page() {
   const session = await getSession();

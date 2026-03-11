@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/lib/auth-client";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import UserGuidesList from "../UserGuidesList";
 import { getSession } from "@/lib/getSession";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,23 @@ interface PageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+export async function generateMetadata(
+  props: PageProps,
+): Promise<Metadata> {
+  const { slug } = await props.params;
+  const user = await getUser(slug);
+
+  if (!user) {
+    return {
+      title: "User not found",
+    };
+  }
+
+  return {
+    title: user.name ?? "Player profile",
+  };
 }
 
 export default async function Page({ params }: PageProps) {

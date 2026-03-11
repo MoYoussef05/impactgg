@@ -19,10 +19,32 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = new URL("http://localhost:3000");
+const siteName = "Impact GG";
+const siteDescription =
+  "Impact GG is an esports-focused platform for players, coaches, and creators to showcase achievements, offer coaching, and publish guides in one place.";
+
 export const metadata: Metadata = {
+  metadataBase: siteUrl,
   title: {
-    default: "Impact GG",
-    template: "%s - Impact GG",
+    default: `${siteName} - Esports Coaching & Guides`,
+    template: `%s - ${siteName}`,
+  },
+  description: siteDescription,
+  openGraph: {
+    title: `${siteName} - Esports Coaching & Guides`,
+    description: siteDescription,
+    url: "/",
+    siteName,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteName} - Esports Coaching & Guides`,
+    description: siteDescription,
+  },
+  icons: {
+    icon: "/favicon.ico",
   },
 };
 
