@@ -53,6 +53,22 @@ For more context on the product thinking, tradeoffs, and what I’d build next, 
 
 ---
 
+## SEO, Metadata & Routing
+
+- **Global metadata**
+  - Root layout (`src/app/layout.tsx`) defines default metadata (title template, description, Open Graph, Twitter card, favicon) with `metadataBase` set to `http://localhost:3000`.
+  - Section layouts (e.g. `/(protected)/coaching/layout.tsx`, `/(protected)/discovery/layout.tsx`, `/(protected)/games/layout.tsx`, `/(protected)/guides/layout.tsx`, `/(protected)/orders/layout.tsx`) provide per-section titles that plug into the global title template.
+- **Dynamic titles**
+  - Profile pages (`/(protected)/u/[slug]/page.tsx`) use `generateMetadata` to set the page title from the user’s name.
+  - Guide detail pages (`/(protected)/guides/[guideId]/page.tsx`) use `generateMetadata` to title the page with the guide’s title.
+- **System pages & web crawlers**
+  - Custom 404 at `src/app/not-found.tsx` with clear navigation back to key surfaces.
+  - `src/app/robots.ts` exposes a permissive robots config pointing to the sitemap.
+  - `src/app/sitemap.ts` exposes the main public URLs (currently centered around `/`).
+  - `src/app/manifest.ts` defines a basic web app manifest for Impact GG (name, short name, theme colors, icons).
+
+---
+
 ## Domain Model (High Level)
 
 Backed by [`prisma/schema.prisma`](./prisma/schema.prisma):

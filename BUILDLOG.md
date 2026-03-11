@@ -157,6 +157,17 @@ This model supports:
   - **shadcn/ui** components for cards, forms, buttons, etc.
   - Tailwind CSS utility classes for layout and styling.
   - **Lexical** for rich text guide content.
+- **Metadata & SEO**:
+  - Root layout (`src/app/layout.tsx`) defines global metadata, including a title template, description, Open Graph/Twitter tags, and `metadataBase`.
+  - Section layouts (e.g. `/(protected)/coaching/layout.tsx`, `/(protected)/discovery/layout.tsx`, `/(protected)/games/layout.tsx`, `/(protected)/guides/layout.tsx`, `/(protected)/orders/layout.tsx`) set per-section titles that feed into the global template.
+  - Dynamic routes use `generateMetadata` to keep titles meaningful:
+    - Profiles (`/(protected)/u/[slug]/page.tsx`) derive the title from the user’s name.
+    - Guide detail pages (`/(protected)/guides/[guideId]/page.tsx`) use the guide’s title.
+  - System-level SEO surfaces:
+    - `src/app/not-found.tsx` – custom 404 with clear navigation back to discovery and coaching.
+    - `src/app/robots.ts` – robots configuration pointing to the sitemap.
+    - `src/app/sitemap.ts` – sitemap entries for key public routes.
+    - `src/app/manifest.ts` – basic PWA manifest for Impact GG.
 
 ### 3.4 Authentication
 
