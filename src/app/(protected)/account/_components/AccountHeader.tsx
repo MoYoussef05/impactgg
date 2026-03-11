@@ -1,3 +1,4 @@
+import SignOutButton from "@/components/partials/auth/SignOutButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type AccountHeaderProps = {
@@ -19,9 +20,12 @@ export default function AccountHeader({ name, email, image }: AccountHeaderProps
           <AvatarFallback>{name?.charAt(0) ?? "?"}</AvatarFallback>
         </Avatar>
       </div>
-      <div className={"px-16"}>
-        <h1 className={"text-2xl font-bold"}>{name}</h1>
-        <p className={"text-sm text-muted-foreground"}>{email}</p>
+      <div className={"px-16 flex items-center justify-between gap-4"}>
+        <div>
+          <h1 className={"text-2xl font-bold"}>{name}</h1>
+          <p className={"text-sm text-muted-foreground"}>{email}</p>
+        </div>
+        <SignOutButton />
       </div>
     </div>
   );

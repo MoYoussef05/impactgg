@@ -1,36 +1,207 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Impact GG – Rize.GG Hiring Challenge Project
+
+Impact GG is a small esports prototype built by **Moe Youssef** as the **“find a real problem in esports and build a small app that solves it”** challenge for **Rize.GG**.
+
+The core idea: **players and coaches don’t have a focused, credibility-first place to showcase their achievements, coaching offers, and written guides.** Today this is fragmented across Discord servers, spreadsheets, Twitter/X posts, and ad‑hoc Google Docs, which makes it hard to:
+
+- Quickly evaluate if a coach is legit.
+- Discover new players and creators worth following.
+- Centralize guides, VOD notes, and achievements in one profile.
+
+Impact GG is a thin vertical slice exploring how a **profile + coaching + guides hub** could look and feel.
+
+For more context on the product thinking, tradeoffs, and what I’d build next, see [`BUILDLOG.md`](./BUILDLOG.md).
+
+---
+
+## Problem & Scope
+
+- **Problem**: Esports players/coaches and aspiring talent struggle with **discoverability and credibility**. Information is scattered and ephemeral (Discord, DMs, private docs), and it’s hard for teams or students to quickly understand who someone is, what they’ve accomplished, and what they offer.
+- **Goal of this prototype**: Provide a simple environment where:
+  - Users can be **discovered** via a searchable directory.
+  - Coaches can publish **coaching offers** with clear pricing and game context.
+  - Creators can publish **guides** tied to their profile.
+- **Deliberate constraints**:
+  - No payments or scheduling flows.
+  - No full onboarding funnel or moderation system.
+  - Focus on a few flows that show how I **think, scope, and execute**.
+
+---
+
+## Tech Stack
+
+**Core stack**
+
+- **Next.js 16** (App Router, `src/app`) for routing and API routes.
+- **React 19** with **TypeScript**.
+- **PostgreSQL + Prisma** (`@prisma/client`, `@prisma/adapter-pg`) for data modeling and persistence.
+- **Better Auth** for authentication and sessions.
+- **TanStack Query** (`@tanstack/react-query`) for client-side data fetching, caching, and status handling.
+- **Nuqs** for URL‑synchronized search/filter state.
+
+**UI & UX**
+
+- **Tailwind CSS 4** and **shadcn/ui** component primitives.
+- **next-themes** for dark/light theme support.
+- **Lexical** rich text editor for authoring guides.
+- **sonner** for toast notifications.
+
+**Tooling**
+
+- **ESLint** and TypeScript for static analysis.
+- **Vitest** for unit tests (see \"Testing\" below).
+
+---
+
+## Domain Model (High Level)
+
+Backed by [`prisma/schema.prisma`](./prisma/schema.prisma):
+
+- **User**
+  - Core identity (name, email, avatar).
+  - Relations to achievements, coaching offers, and guides.
+- **Achievement**
+  - Represents notable results (e.g., tournament finishes, seasonal ranks).
+  - Optional game and year fields for flexible records.
+- **Coaching**
+  - A coach’s offer: `title`, `description`, `game`, `pricePerHour`.
+  - Tied to a `user` (coach).
+- **Guide**
+  - Long-form content written by a user.
+  - `title`, `description`, `content`, `game`.
+
+This lets us build a **profile-first** experience where discovery, offers, and content all anchor around people.
+
+---
+
+## Feature Tour
+
+All protected routes assume a signed-in user (via Better Auth).
+
+- **Discovery**
+  - Path: `/(protected)/discovery`
+  - Search for users by name/email with pagination.
+  - Shows counts for achievements, guides, and coaching offers per user.
+  - Backed by `GET /api/discovery` with server-side pagination.
+
+- **Coaching**
+  - Path: `/(protected)/coaching`
+  - Search + filter coaching offers by query and game.
+  - Sort by most recent or price (asc/desc).
+  - Paginated grid of coaching cards with coach info and pricing.
+  - Backed by `GET /api/coaching`.
+
+- **Guides**
+  - Paths such as `/(protected)/guides` and `/(protected)/guides/[guideId]`
+  - List and view written guides.
+  - Uses Lexical for rich-text content and Prisma-backed storage.
+  - Backed by `GET /api/guides`.
+
+- **User profiles**
+  - Paths such as `/(protected)/u/[slug]`
+  - Profile-style page for a user showing their public information and content.
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### 1. Prerequisites
+
+- **Node.js** 20+
+- **PostgreSQL** database (local or hosted, e.g. Neon)
+- Package manager of your choice: `npm`, `yarn`, or `pnpm`
+
+### 2. Environment variables
+
+Create a `.env` file in the project root and set at least:
+
+```bash
+DATABASE_URL="postgresql://user:password@host:5432/impactgg"
+```
+
+You will also need the environment variables required by **Better Auth** (for example, provider secrets, JWT/crypto secrets, etc.). These are intentionally not committed; configure them to match your local setup.
+
+### 3. Install dependencies
+
+```bash
+npm install
+# or
+yarn
+# or
+pnpm install
+```
+
+### 4. Generate Prisma client and run migrations
+
+The Prisma client is generated into `src/generated/prisma`.
+
+```bash
+npx prisma generate
+# optionally, if you maintain migrations:
+# npx prisma migrate dev
+```
+
+### 5. Run the dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open `http://localhost:3000` in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+Defined in `package.json`:
 
-To learn more about Next.js, take a look at the following resources:
+- **`npm run dev`** – Start the Next.js dev server.
+- **`npm run build`** – Generate Prisma client and build the Next.js app.
+- **`npm start`** – Start the production server (after `npm run build`).
+- **`npm test`** – Run the Vitest test suite.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Testing
 
-## Deploy on Vercel
+This project uses **Vitest** for unit tests.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Tests live alongside code, e.g. `src/lib/pagination.test.ts`.
+- To run all tests:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm test
+```
+
+### What is covered
+
+- **Pagination helper** (`getPagination` in `src/lib/pagination.ts`):
+  - Verifies correct `skip`/`take`/`page` for typical and boundary cases.
+  - This function is central to list and search UX across APIs such as `/api/coaching`, `/api/guides`, and `/api/discovery`.
+
+With more time, I’d extend coverage to:
+
+- Critical API endpoints (happy path + error cases).
+- Form and filtering behavior at the component level (e.g., the coaching and discovery search flows).
+
+---
+
+## Error Handling Strategy
+
+- **API layer**
+  - Each major API route (e.g. `/api/coaching`, `/api/guides`, `/api/discovery`) wraps logic in `try/catch` and returns JSON with appropriate status codes (e.g. `500` with a clear error message).
+- **UI layer**
+  - Pages backed by these APIs check loading and error states via TanStack Query.
+  - On error, the UI surfaces a friendly message instead of crashing, and keeps the layout intact.
+
+See `BUILDLOG.md` for more detail on tradeoffs and what I’d tighten next around error handling.
+
+---
+
+## Rize.GG Review Notes
+
+- **Author**: Moe Youssef
+- **Purpose**: Submission for the Rize.GG hiring challenge (“find a real problem in esports and build a small app that solves it”).
+- **Focus**: Demonstrate product thinking (problem framing, scope choices), pragmatic architecture (Next.js + Prisma + Postgres), and solid baseline UX for discovery, coaching, and guides.
+
+For a narrative walkthrough of design choices, tradeoffs, and future work, please read [`BUILDLOG.md`](./BUILDLOG.md).
