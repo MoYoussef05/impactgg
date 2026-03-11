@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL! || "http://localhost:3000";
 
   return {
     rules: {
@@ -12,4 +12,3 @@ export default function robots(): MetadataRoute.Robots {
     host: baseUrl,
   };
 }
-

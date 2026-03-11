@@ -19,7 +19,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = new URL("http://localhost:3000");
+const siteUrl = new URL(
+  process.env.NEXT_PUBLIC_APP_URL! || "http://localhost:3000",
+);
 const siteName = "Impact GG";
 const siteDescription =
   "Impact GG is an esports-focused platform for players, coaches, and creators to showcase achievements, offer coaching, and publish guides in one place.";
