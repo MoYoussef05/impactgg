@@ -11,7 +11,7 @@ import ThemeToggle from "@/components/theme/ThemeToggle";
 
 export default function AppSidebar() {
   return (
-    <>
+    <div suppressHydrationWarning>
       <Sidebar variant={"inset"} collapsible={"icon"}>
         <SidebarHeader>
           <AppSidebarHeader />
@@ -23,6 +23,6 @@ export default function AppSidebar() {
           <ThemeToggle />
         </SidebarFooter>
       </Sidebar>
-    </>
+    </div>
   );
 }

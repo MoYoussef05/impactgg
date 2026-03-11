@@ -61,7 +61,7 @@ export default function GamesPage() {
 
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-3 rounded-lg border bg-card p-4 sm:flex-row sm:items-center"
+        className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center"
       >
         <div className="flex-1 space-y-2">
           <Label htmlFor="search">Search by title</Label>

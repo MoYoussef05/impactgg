@@ -20,6 +20,8 @@ model User {
   accounts      Account[]
 
   achievements Achievement[]
+  coaching    Coaching[]
+  guides      Guide[]
 
   @@unique([email])
   @@map("user")
@@ -93,4 +95,36 @@ model Achievement {
   updatedAt DateTime @updatedAt
 
   @@map("achievement")
+}
+
+model Coaching {
+  id        String   @id @default(uuid())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  title     String
+  description String
+  game      String
+  pricePerHour Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Guide {
+  id        String   @id @default(uuid())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  title     String
+  description String
+  content   String   @default("")
+  game      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("guide")
 }
