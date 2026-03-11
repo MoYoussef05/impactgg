@@ -23,14 +23,14 @@ type AvailabilitySectionProps = {
   initialAvailability: CoachingAvailability[];
 };
 
-const days = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
+const DAY_OPTIONS = [
+  { label: "Monday", value: "1" },
+  { label: "Tuesday", value: "2" },
+  { label: "Wednesday", value: "3" },
+  { label: "Thursday", value: "4" },
+  { label: "Friday", value: "5" },
+  { label: "Saturday", value: "6" },
+  { label: "Sunday", value: "0" },
 ];
 
 const TIME_ZONES = [
@@ -186,6 +186,13 @@ export default function AvailabilitySection({
         <div className="space-y-3">
           {entries.map((entry, index) => {
             const isCustomTimeZone = !TIME_ZONES.includes(entry.timeZone);
+            const selectedDayLabel = DAY_OPTIONS.find(
+              (option) =>
+                option.value ===
+                (entry.dayOfWeek !== undefined
+                  ? entry.dayOfWeek.toString()
+                  : ""),
+            )?.label;
 
             return (
               <div
@@ -205,12 +212,12 @@ export default function AvailabilitySection({
                     }
                   >
                     <SelectTrigger className="w-[120px]">
-                      <SelectValue placeholder="Day" />
+                      <span>{selectedDayLabel ?? "Day"}</span>
                     </SelectTrigger>
                     <SelectContent>
-                      {days.map((label, idx) => (
-                        <SelectItem key={idx} value={idx.toString()}>
-                          {label}
+                      {DAY_OPTIONS.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
                         </SelectItem>
                       ))}
                     </SelectContent>

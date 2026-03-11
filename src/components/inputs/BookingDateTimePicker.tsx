@@ -82,7 +82,7 @@ export function BookingDateTimePicker({
       return [];
     }
 
-    const dayOfWeek = selectedDate.getUTCDay();
+    const dayOfWeek = selectedDate.getDay();
     const blocksForDay = availability.filter(
       (block) => block.dayOfWeek === dayOfWeek,
     );

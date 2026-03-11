@@ -25,9 +25,7 @@ interface PageProps {
   }>;
 }
 
-export async function generateMetadata(
-  props: PageProps,
-): Promise<Metadata> {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const { slug } = await props.params;
   const user = await getUser(slug);
 
@@ -60,21 +58,6 @@ export default async function Page({ params }: PageProps) {
         email={user.email}
         image={user.image ?? null}
       />
-
-      {primaryCoaching && (
-        <section>
-          <Separator className={"my-4"} />
-          <h2 className={"mb-3 text-lg font-semibold"}>
-            Book a coaching session
-          </h2>
-          <ProfileBookingSection
-            primaryCoachingId={primaryCoaching.id}
-            coachId={user.id}
-            game={primaryCoaching.game}
-            coachName={user.name}
-          />
-        </section>
-      )}
 
       <section>
         <Separator className={"my-4"} />
