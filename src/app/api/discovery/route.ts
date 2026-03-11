@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import prisma from "@/lib/prisma";
 import { getPagination } from "@/lib/pagination";
+import { Prisma } from "@/generated/prisma/client";
 
 const PAGE_SIZE = 24;
 
@@ -14,13 +15,23 @@ export async function GET(req: NextRequest) {
     const pageParam = parseInt(searchParams.get("page") || "1", 10);
     const { page, pageSize, skip, take } = getPagination(pageParam, PAGE_SIZE);
 
-    const where =
+    const where: Prisma.UserWhereInput =
       q.length === 0
         ? {}
         : {
             OR: [
-              { name: { contains: q, mode: "insensitive" } },
-              { email: { contains: q, mode: "insensitive" } },
+              {
+                name: {
+                  contains: q,
+                  mode: Prisma.QueryMode.insensitive,
+                },
+              },
+              {
+                email: {
+                  contains: q,
+                  mode: Prisma.QueryMode.insensitive,
+                },
+              },
             ],
           };
 
