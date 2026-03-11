@@ -8,8 +8,12 @@ import { AppSidebarHeader } from "./AppSidebarHeader";
 import AppSidebarContent from "./AppSidebarContent";
 import { SIDEBAR_NAVIGATION } from "@/data/navigation";
 import ThemeToggle from "@/components/theme/ThemeToggle";
+import { getSession } from "@/lib/getSession";
 
-export default function AppSidebar() {
+export default async function AppSidebar() {
+  const session = await getSession();
+  const isCoach = session?.user.isCoach ?? false;
+
   return (
     <div suppressHydrationWarning>
       <Sidebar variant={"inset"} collapsible={"icon"}>
@@ -17,7 +21,7 @@ export default function AppSidebar() {
           <AppSidebarHeader />
         </SidebarHeader>
         <SidebarContent>
-          <AppSidebarContent items={SIDEBAR_NAVIGATION} />
+          <AppSidebarContent items={SIDEBAR_NAVIGATION} isCoach={isCoach} />
         </SidebarContent>
         <SidebarFooter>
           <ThemeToggle />

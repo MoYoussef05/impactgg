@@ -89,7 +89,8 @@ All protected routes assume a signed-in user (via Better Auth).
   - Search + filter coaching offers by query and game.
   - Sort by most recent or price (asc/desc).
   - Paginated grid of coaching cards with coach info and pricing.
-  - Backed by `GET /api/coaching`.
+  - From each card, logged-in learners can open a **booking dialog** to request a session for a specific date/time and duration.
+  - Backed by `GET /api/coaching` plus booking server actions.
 
 - **Guides**
   - Paths such as `/(protected)/guides` and `/(protected)/guides/[guideId]`
@@ -100,6 +101,12 @@ All protected routes assume a signed-in user (via Better Auth).
 - **User profiles**
   - Paths such as `/(protected)/u/[slug]`
   - Profile-style page for a user showing their public information and content.
+
+- **My bookings & orders**
+  - Path: `/(protected)/my-bookings` and `/(protected)/orders/learner`
+  - Let learners see all of their coaching booking requests, their status, and cancel upcoming sessions.
+  - Path: `/(protected)/orders/coach`
+  - Gives coaches a simple dashboard to manage availability and respond to booking requests for their offers.
 
 ---
 
@@ -178,6 +185,33 @@ npm test
 - **Pagination helper** (`getPagination` in `src/lib/pagination.ts`):
   - Verifies correct `skip`/`take`/`page` for typical and boundary cases.
   - This function is central to list and search UX across APIs such as `/api/coaching`, `/api/guides`, and `/api/discovery`.
+
+With more time, I would extend coverage to:
+
+- Critical API endpoints (happy path + error cases).
+- Form and filtering behavior at the component level (e.g., the coaching and discovery search flows).
+
+---
+
+## Booking Coaching (No Payments)
+
+- **Booking model**:
+  - Coaches define a recurring **availability** (day of week, time windows, time zone) from their Account page.
+  - Availability uses a curated **time zone dropdown** (with an \"Other\" option for custom zones) so data is consistent but still flexible.
+  - Learners can request a booking from any coaching card using a unified **calendar + time-slot picker** that only allows selecting times which fall inside the coach’s configured availability blocks.
+  - Requests become `CoachingBooking` records with a status (`PENDING`, `ACCEPTED`, `REJECTED`, `CANCELLED`, `COMPLETED`).
+- **Coach experience**:
+  - Opt into coaching via an `isCoach` toggle on the **Account** page. When enabled, the account surface reveals:
+    - An **Availability** editor.
+    - A **Coaching offers** manager.
+    - A **Coach bookings** dashboard for incoming requests.
+  - Accept or reject `PENDING` bookings; mark accepted ones as **completed** or **cancelled**.
+- **Learner experience**:
+  - See all requests on the **My bookings** / **Orders (learner)** views and cancel `PENDING` / `ACCEPTED` bookings.
+  - Use the **Orders** entry in the sidebar to jump between learner and coach order dashboards.
+- **Out-of-band coordination**:
+  - Communication and payments are intentionally **out of scope** for this challenge.
+  - Each booking captures contact details (email and optional Discord handle) so coaches and learners can coordinate on their preferred channels.
 
 With more time, I’d extend coverage to:
 

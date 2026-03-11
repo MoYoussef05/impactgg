@@ -12,18 +12,22 @@ import { usePathname } from "next/navigation";
 
 export default function AppSidebarContent({
   items,
+  isCoach,
 }: {
   items: SidebarNavigationItem[];
+  isCoach: boolean;
 }) {
   const pathname = usePathname();
   const isActive = (item: SidebarNavigationItem) => pathname === item.href;
+
+  const visibleItems = items.filter((item) => !item.requiresCoach || isCoach);
 
   return (
     <>
       <SidebarGroup>
         <SidebarGroupLabel>Platform</SidebarGroupLabel>
         <SidebarMenu>
-          {items.map((item) => (
+          {visibleItems.map((item) => (
             <SidebarMenuItem key={item.label}>
               <a href={item.href}>
                 <SidebarMenuButton

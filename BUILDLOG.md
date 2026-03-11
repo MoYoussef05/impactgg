@@ -105,20 +105,31 @@ Defined in [`prisma/schema.prisma`](./prisma/schema.prisma):
 
 - **User**
   - Identity fields (`id`, `name`, `email`, `image`).
-  - Relations: `achievements`, `coaching`, `guides`.
+  - Relations: `achievements`, `coaching`, `guides`, plus **bookings** and **availability**.
+  - A boolean `isCoach` flag that gates coach-only UX (availability editor, coaching offers management, and coach bookings dashboards).
 - **Achievement**
   - `type` (general/season), optional `game` and `year`, plus `description`.
 - **Coaching**
   - `title`, `description`, `game`, `pricePerHour`.
   - Belongs to a `user` (coach).
+  - Has many `CoachingBooking` entries.
 - **Guide**
   - `title`, `description`, `content`, `game`.
   - Belongs to a `user` (author).
+- **CoachingAvailability**
+  - Recurring availability blocks for a coach: `dayOfWeek`, `startTime`, `endTime`, `timeZone`, optional `game`.
+  - Time zones are chosen from a curated dropdown (with an \"Other\" escape hatch) to avoid free-form strings while still supporting edge cases.
+  - Keeps scheduling logic simple while still realistic.
+- **CoachingBooking**
+  - Represents a single booking between a **learner** and a **coach** for a specific `Coaching` offer.
+  - Stores `startsAt`, `endsAt`, `durationMinutes`, `status` (`PENDING`, `ACCEPTED`, `REJECTED`, `CANCELLED`, `COMPLETED`), and learner-provided context (`learnerNote`, email, optional Discord handle).
+  - Bookings are created through a calendar + time-slot picker that only allows slots which fit inside the coach’s configured availability windows.
 
 This model supports:
 
 - Discovery of people with counts of their achievements, guides, and coaching offers.
 - Viewing and filtering of coaching offers and guides per person.
+- A **non-payment booking flow** where coaches control availability and learners can request concrete sessions, with dashboards for both sides to manage those bookings.
 
 ### 3.2 Backend
 
@@ -153,6 +164,7 @@ This model supports:
 - Not all auth providers and flows are fully showcased in this build log, but the architecture is ready for:
   - OAuth providers.
   - Email‑based sign in / verification.
+  - Enriching the session with additional user fields like `isCoach` so that client components (e.g., the sidebar and account page) can gate coach-only UX.
 
 ---
 
@@ -165,13 +177,16 @@ This model supports:
   - Listing and filtering coaching offers.
   - Basic guides support tied to users.
   - Basic profile surfaces.
+  - A **lightweight, non-payment booking system**: availability + requests + simple status management, including dedicated views for coaches and learners.
+  - A richer **calendar + time-slot booking UI** that respects coach availability when offering slots.
+  - A **coach mode toggle** so that only users who opt into coaching see the full coaching and orders surfaces.
 - **Excluded for now**
   - Payments, invoicing, and payout rails.
-  - Scheduling / availability management.
+  - Calendar sync with Google/Outlook and automatic time-zone conversions.
   - Messaging or chat between users.
   - Moderation tools and reporting/flagging flows.
 
-Rationale: These excluded pieces are significant on their own and would either require stubs or partial implementations. I chose to keep the scope tight and shippable instead.
+Rationale: Payments and deep scheduling features are significant on their own and would either require stubs or partial implementations. I chose a middle ground: enough booking flow to feel real (availability + requests + status changes, availability-aware time slots, and coach-mode-gated dashboards) while still being feasible in the challenge timeframe.
 
 ### 4.2 Performance & reliability tradeoffs
 

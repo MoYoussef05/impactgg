@@ -23,6 +23,12 @@ model User {
   coaching    Coaching[]
   guides      Guide[]
 
+  isCoach       Boolean             @default(false)
+
+  coachBookings   CoachingBooking[] @relation("CoachBookings")
+  learnerBookings CoachingBooking[] @relation("LearnerBookings")
+  availability    CoachingAvailability[]
+
   @@unique([email])
   @@map("user")
 }
@@ -80,6 +86,14 @@ enum AchievementType {
   SEASON
 }
 
+enum BookingStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+  COMPLETED
+}
+
 model Achievement {
   id        String   @id @default(uuid())
 
@@ -110,6 +124,8 @@ model Coaching {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  bookings  CoachingBooking[]
 }
 
 model Guide {
@@ -127,4 +143,51 @@ model Guide {
   updatedAt DateTime @updatedAt
 
   @@map("guide")
+}
+
+model CoachingAvailability {
+  id        String   @id @default(uuid())
+
+  coachId   String
+  coach     User     @relation(fields: [coachId], references: [id], onDelete: Cascade)
+
+  game      String?
+  dayOfWeek Int
+  startTime String 
+  endTime   String 
+  timeZone  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CoachingBooking {
+  id        String   @id @default(uuid())
+
+  coachId   String
+  coach     User     @relation("CoachBookings", fields: [coachId], references: [id], onDelete: Cascade)
+
+  learnerId String
+  learner   User     @relation("LearnerBookings", fields: [learnerId], references: [id], onDelete: Cascade)
+
+  coachingId String
+  coaching   Coaching @relation(fields: [coachingId], references: [id], onDelete: Cascade)
+
+  game           String
+  startsAt       DateTime
+  endsAt         DateTime
+  durationMinutes Int
+
+  status         BookingStatus @default(PENDING)
+
+  learnerNote     String?
+  preferredDiscord String?
+  learnerEmail     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([coachId])
+  @@index([learnerId])
+  @@index([coachingId])
 }
