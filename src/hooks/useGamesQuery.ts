@@ -7,6 +7,7 @@ export interface GamesQueryParams {
   q?: string;
   page?: number;
   pageSize?: number;
+  all?: boolean;
 }
 
 export interface GamesQueryResponse {
@@ -16,19 +17,23 @@ export interface GamesQueryResponse {
   pageSize: number;
 }
 
-async function fetchGames(params: GamesQueryParams): Promise<GamesQueryResponse> {
+async function fetchGames(
+  params: GamesQueryParams,
+): Promise<GamesQueryResponse> {
   const searchParams = new URLSearchParams();
 
-  if (params.q && params.q.trim()) {
-    searchParams.set("q", params.q.trim());
-  }
-
-  if (params.page) {
-    searchParams.set("page", String(params.page));
-  }
-
-  if (params.pageSize) {
-    searchParams.set("pageSize", String(params.pageSize));
+  if (params.all) {
+    searchParams.set("all", "true");
+  } else {
+    if (params.q?.trim()) {
+      searchParams.set("q", params.q.trim());
+    }
+    if (params.page) {
+      searchParams.set("page", String(params.page));
+    }
+    if (params.pageSize) {
+      searchParams.set("pageSize", String(params.pageSize));
+    }
   }
 
   const queryString = searchParams.toString();
@@ -51,3 +56,6 @@ export function useGamesQuery(params: GamesQueryParams) {
   });
 }
 
+export function useAllGamesQuery() {
+  return useGamesQuery({ all: true });
+}

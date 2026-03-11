@@ -34,6 +34,17 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const searchParams = url.searchParams;
 
+    const allParam = searchParams.get("all") === "true";
+    if (allParam) {
+      const allGames = await fetchAllGames();
+      return NextResponse.json({
+        items: allGames,
+        total: allGames.length,
+        page: 1,
+        pageSize: allGames.length,
+      });
+    }
+
     const q = (searchParams.get("q") || "").trim().toLowerCase();
     const page = Math.max(
       parseInt(searchParams.get("page") || "1", 10) || 1,

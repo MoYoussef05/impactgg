@@ -16,7 +16,6 @@ export default function GamesPage() {
     history: "push",
   });
 
-  // Draft input so we don't push URL updates on every keystroke.
   const [searchInput, setSearchInput] = useState(q);
 
   useEffect(() => {
@@ -37,7 +36,6 @@ export default function GamesPage() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const nextQ = searchInput.trim();
-    // Batched URL updates (q + page) in one tick.
     setUrlState({
       q: nextQ ? nextQ : null,
       page: 1,
@@ -46,7 +44,6 @@ export default function GamesPage() {
 
   const handleReset = () => {
     setSearchInput("");
-    // Clear all keys managed by this hook.
     setUrlState(null);
   };
 
@@ -66,7 +63,7 @@ export default function GamesPage() {
         onSubmit={handleSubmit}
         className="flex flex-col gap-3 rounded-lg border bg-card p-4 sm:flex-row sm:items-center"
       >
-        <div className="flex-1">
+        <div className="flex-1 space-y-2">
           <Label htmlFor="search">Search by title</Label>
           <Input
             id="search"
